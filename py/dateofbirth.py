@@ -6,6 +6,10 @@ def digit_sum(num):
     return sum([int(char) for char in str(num)])
 
 x = datetime.datetime.now()
+
+#x = datetime.datetime(2017, 7, 20)
+
+year_now = x.year
 month_now = x.strftime("%m")
 day_now = x.strftime("%d")
 
@@ -24,11 +28,11 @@ class DateOfBirth:
         
         #is year current or in past
         if whichYear == "forNow":
-            year_now = x.year
+            self.yearNow = year_now
         else:
-            year_now = int(whichYear)
-        
-        self.yearNow = year_now
+            self.yearNow = int(whichYear)
+            
+            
         #current year
         self.currentYear = digit_sum(self.yearNow)
         
@@ -48,44 +52,45 @@ class DateOfBirth:
     
         
     def lifePath(self):
-        
-        
         #Feb 22 1982
-        preLifePath = m + d + y
+        preLifePath = self.mm + self.dd + self.yyyy
+        lifePath = self.resultForCores(preLifePath)['core']
         
-        lifePath = self.resultForLifeNum(preLifePath)['core']
-        
-        
-        if lifePath == m:
-            subelem = m
+        if lifePath == self.mm:
+            subelem = self.mm
         else:
             subelem = 0
+        bLpBrigde = abs(lifePath - self.dd)
         
+        def __str__(self):
+            return "{'core': 8, 'karma': 0, 'subelem': 0, 'birthdayLifepathBrigde': 4}"
         
-        
-        #personal year number bd + bm + cy1
-        prePersonalYearNum = (dd + mm + currentYear)
-        
-        PersonalYearNum = self.resultForLifeNum(prePersonalYearNum)
-        
-        bLpBrigde = abs(lifePath - d)
-        
-        
-        
-        #print(lifePath, PersonalYearNum)    
-        
-        return {'lifePath':self.resultForLifeNum(preLifePath), 'subelem':subelem,
-                'yearNum':PersonalYearNum, 'bLpBrigde':bLpBrigde
-                }
+        return {'core':self.resultForCores(preLifePath)['core'], 'karma':self.resultForCores(preLifePath)['coreKarma'],
+                'subelem':subelem,'birthdayLifepathBrigde':bLpBrigde}
     
     def personalYearNum(self):
         #personal year number bd + bm + cy1
-        prePersonalYearNum = (self.dd + self.mm + self.currentYear)
+        prePersonalYearNum = self.dd + self.mm + self.currentYear
         return self.resultForCores(prePersonalYearNum)
     
     def personalMonthNum(self):
         #personal month number calendermonth + personal year
-        prePersonalMonthNum = (int(month_now) + self.personalYearNum()['core'])
+        prePersonalMonthNum = int(month_now) + self.personalYearNum()['core']
         return self.resultForCores(prePersonalMonthNum)
-        
+    
+    def personalDayNum(self):
+        #personal day number= calendermonth + calenderday + personal year
+        prePersonalDayNum = int(month_now) + int(day_now) + self.personalYearNum()['core']
+        return self.resultForCores(prePersonalDayNum)
+    
+    def __str__(self):
+            return "methods = lifePath, personalYearNum, personalMonthNum, personalDayNum"
        
+oracle = DateOfBirth('22/02/1982', 'forNow')
+print(oracle)
+print(oracle.personalYearNum()['core'])
+print(oracle.personalMonthNum()['core'])
+print(oracle.personalDayNum()['core'])
+
+
+
